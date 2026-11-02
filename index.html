@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📐 Composition of Functions - رياضيات 11 متقدم | Mr. Mohammed Hesham</title>
+<meta name="description" content="امتحان تفاعلي عن تركيب الدوال - رياضيات 11 متقدم">
+<meta name="author" content="Mr. Mohammed Hesham">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+body.en-mode { font-family: 'Inter', sans-serif; direction: ltr; }
+.arabic-math { font-family: 'Amiri', 'Cairo', serif; }
+.correct { background-color: #dcfce7 !important; border-color: #16a34a !important; }
+.incorrect { background-color: #fee2e2 !important; border-color: #dc2626 !important; }
+.timer-warning { color: #dc2626 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.7; } }
+@media print { .no-print { display: none !important; } }
+.success-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.875rem; }
+.grade-excellent { background: #dcfce7; color: #166534; }
+.grade-good { background: #fef3c7; color: #92400e; }
+.grade-pass { background: #dbeafe; color: #1e40af; }
+.grade-fail { background: #fee2e2; color: #991b1b; }
+.lang-switch { position: fixed; top: 16px; left: 16px; z-index: 100; background: white; padding: 6px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; gap: 4px; border: 2px solid #d97706; }
+body.en-mode .lang-switch { left: auto; right: 16px; }
+.lang-btn { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s; border: none; font-size: 0.875rem; background: transparent; color: #6b7280; }
+.lang-btn.active { background: #d97706; color: white; box-shadow: 0 2px 6px rgba(217,119,6,0.4); }
+.shuffle-badge { display: inline-block; background: linear-gradient(135deg, #d97706, #b45309); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; margin-right: 8px; }
+body.en-mode .shuffle-badge { margin-right: 0; margin-left: 8px; }
+.math-display { display: inline-block; direction: ltr; font-family: 'Amiri', serif; font-size: 1.1em; padding: 2px 6px; background: #fef3c7; border-radius: 4px; margin: 2px; color: #92400e; font-weight: 600; }
+.save-indicator { position: fixed; bottom: 20px; left: 20px; z-index: 200; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+body.en-mode .save-indicator { left: auto; right: 20px; }
+.save-indicator.show { opacity: 1; }
+.formula-box { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; margin: 10px 0; font-family: 'Amiri', serif; direction: ltr; text-align: center; }
+.svg-graph { display: block; margin: 12px auto; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px; max-width: 100%; }
+.graph-container { text-align: center; margin: 10px 0; }
+.module-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 8px; }
+.module-1 { background: #fef3c7; color: #92400e; }
+.module-2 { background: #dbeafe; color: #1e40af; }
+.module-3 { background: #fce7f3; color: #9f1239; }
+.module-4 { background: #ecfdf5; color: #065f46; }
+.module-5 { background: #ede9fe; color: #5b21b6; }
+.module-6 { background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+<div class="lang-switch no-print">
+<button class="lang-btn active" onclick="setLanguage('ar')" id="btn-ar">عربي</button>
+<button class="lang-btn" onclick="setLanguage('en')" id="btn-en">EN</button>
+</div>
+
+<div id="saveIndicator" class="save-indicator">💾 <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></div>
+
+<div id="timer-container" class="max-w-5xl mx-auto mb-4 text-center no-print">
+<div class="bg-white p-4 rounded-2xl shadow-lg inline-block border-2 border-amber-100">
+<span class="text-gray-600 ml-2">⏰ <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></span>
+<span id="timer" class="text-2xl font-bold text-amber-700 font-mono">75:00</span>
+<span class="shuffle-badge">📐 <span data-ar="تركيب الدوال" data-en="Composition of Functions">تركيب الدوال</span> - 30 <span data-ar="سؤال" data-en="Questions">سؤال</span></span>
+</div>
+</div>
+
+<div class="max-w-5xl mx-auto mb-6 flex flex-wrap gap-3 justify-center no-print">
+<button onclick="toggleAnswers()" class="bg-amber-700 hover:bg-amber-800 text-white px-5 py-2 rounded-xl font-medium transition shadow">👀 <span data-ar="إظهار/إخفاء الإجابات" data-en="Show/Hide Answers">إظهار/إخفاء الإجابات</span></button>
+<button onclick="window.print()" class="bg-gray-700 hover:bg-gray-900 text-white px-5 py-2 rounded-xl font-medium transition shadow">🖨️ <span data-ar="طباعة" data-en="Print">طباعة</span></button>
+<button onclick="reshuffleExam()" class="bg-gradient-to-r from-amber-700 to-orange-600 hover:from-amber-800 hover:to-orange-700 text-white px-5 py-2 rounded-xl font-medium transition shadow">🔄 <span data-ar="أسئلة جديدة" data-en="New Questions">أسئلة جديدة</span></button>
+<button onclick="clearProgress()" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition shadow">🗑️ <span data-ar="مسح التقدم" data-en="Clear Progress">مسح التقدم</span></button>
+</div>
+
+<header class="max-w-5xl mx-auto bg-white p-8 rounded-3xl shadow-2xl mb-8 border-4 border-amber-500">
+<div class="text-center">
+<div class="inline-block bg-amber-700 text-white px-6 py-2 rounded-full text-sm font-bold mb-4">MATH 11 ADVANCED - QUESTION 6</div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">📐 <span data-ar="إيجاد تركيب الدوال" data-en="Composition of Functions">إيجاد تركيب الدوال</span></h1>
+<h2 class="text-xl text-amber-700 font-semibold mb-2"><span data-ar="رياضيات 11 متقدم - مثال 2 وتمارين 2A-2B" data-en="Grade 11 Advanced - Example 2 & Exercises 2A-2B">رياضيات 11 متقدم - مثال 2 وتمارين 2A-2B</span></h2>
+<p class="text-gray-600 mb-4"><span data-ar="Finding [f ∘ g](x), [g ∘ f](x), and Evaluating Compositions" data-en="Finding [f ∘ g](x), [g ∘ f](x), and Evaluating Compositions">Finding [f ∘ g](x), [g ∘ f](x), and Evaluating Compositions</span></p>
+<p class="text-sm text-green-600 font-semibold">💾 <span data-ar="يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 6 أقسام" data-en="Your progress is auto-saved - 30 questions in 6 sections">يتم حفظ تقدمك تلقائياً - 30 سؤالاً في 6 أقسام</span></p>
+</div>
+<div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+<span>📅 <span data-ar="التاريخ:" data-en="Date:">التاريخ:</span> <input type="text" id="examDate" class="border-b-2 border-amber-300 bg-transparent w-32 text-center"></span>
+<span>😊 <span data-ar="الاسم:" data-en="Name:">الاسم:</span> <input type="text" id="studentName" class="border-b-2 border-amber-300 bg-transparent w-40 text-center" data-placeholder-ar="اكتب اسمك" data-placeholder-en="Your name" placeholder="اكتب اسمك"></span>
+<span>🏫 <span data-ar="الشعبة:" data-en="Class:">الشعبة:</span> <input type="text" id="studentClass" class="border-b-2 border-amber-300 bg-transparent w-32 text-center" data-placeholder-ar="الشعبة" data-placeholder-en="Class" placeholder="الشعبة"></span>
+<span>⏰ <span data-ar="المدة: 75 دقيقة" data-en="Duration: 75 min">المدة: 75 دقيقة</span></span>
+<span>📊 <span data-ar="المجموع: 100 درجة" data-en="Total: 100 points">المجموع: 100 درجة</span></span>
+</div>
+</header>
+
+<div class="max-w-5xl mx-auto mb-6 bg-white p-4 rounded-xl shadow-lg border-2 border-amber-200 no-print">
+<h3 class="font-bold text-lg mb-3 text-amber-800 text-center">📐 <span data-ar="القوانين الأساسية" data-en="Key Formulas">القوانين الأساسية</span></h3>
+<div class="grid md:grid-cols-3 gap-3 text-sm">
+<div class="formula-box">
+<strong><span data-ar="تركيب الدوال:" data-en="Composition:">تركيب الدوال:</span></strong><br>
+<span class="math-display">[f ∘ g](x) = f(g(x))</span><br>
+<span data-ar="طبق f على g(x)" data-en="Apply f to g(x)">طبق f على g(x)</span>
+</div>
+<div class="formula-box">
+<strong><span data-ar="التركيب العكسي:" data-en="Reverse Composition:">التركيب العكسي:</span></strong><br>
+<span class="math-display">[g ∘ f](x) = g(f(x))</span><br>
+<span data-ar="طبق g على f(x)" data-en="Apply g to f(x)">طبق g على f(x)</span>
+</div>
+<div class="formula-box">
+<strong><span data-ar="التقييم:" data-en="Evaluation:">التقييم:</span></strong><br>
+<span data-ar="[f ∘ g](a) = f(g(a))" data-en="[f ∘ g](a) = f(g(a))">[f ∘ g](a) = f(g(a))</span><br>
+<span data-ar="احسب g(a) أولاً ثم طبق f" data-en="Calculate g(a) first then apply f">احسب g(a) أولاً ثم طبق f</span>
+</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto space-y-8" id="exam-content"></main>
+
+<div class="text-center no-print pb-8 mt-8">
+<button onclick="gradeExam()" class="bg-gradient-to-r from-amber-700 to-orange-600 hover:from-amber-800 hover:to-orange-700 text-white text-lg px-12 py-4 rounded-2xl font-bold shadow-xl transition transform hover:scale-105">🎯 <span data-ar="صحح إجاباتي!" data-en="Grade My Exam!">صحح إجاباتي!</span></button>
+</div>
+
+<div id="results-panel" class="max-w-5xl mx-auto mt-8 bg-white p-8 rounded-3xl shadow-2xl border-4 border-amber-500 hidden no-print">
+<h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">🏆 <span data-ar="نتيجتك يا بطل!" data-en="Your Result, Champion!">نتيجتك يا بطل!</span> 🏆</h2>
+<div class="grid md:grid-cols-3 gap-4 mb-6">
+<div class="bg-amber-50 p-4 rounded-xl text-center"><p>😊 <span data-ar="الاسم" data-en="Name">الاسم</span></p><p id="res-name" class="font-bold text-xl text-amber-700">-</p></div>
+<div class="bg-orange-50 p-4 rounded-xl text-center"><p>📅 <span data-ar="التاريخ" data-en="Date">التاريخ</span></p><p id="res-date" class="font-bold text-xl text-orange-700">-</p></div>
+<div class="bg-amber-50 p-4 rounded-xl text-center"><p>🌟 <span data-ar="المجموع" data-en="Total">المجموع</span></p><p id="res-total" class="font-bold text-3xl text-amber-700">0 / 100</p></div>
+</div>
+<div class="text-center mb-6">
+<span id="success-badge" class="success-badge grade-excellent">-</span>
+<p id="success-percent" class="text-4xl font-bold text-amber-700 mt-2">0%</p>
+<p class="text-sm text-gray-500"><span data-ar="نسبة النجاح" data-en="Success Rate">نسبة النجاح</span></p>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl mb-6">
+<h3 class="font-bold text-lg mb-4 text-gray-800">📊 <span data-ar="أداؤك في كل قسم:" data-en="Your Performance by Section:">أداؤك في كل قسم:</span></h3>
+<div class="space-y-3" id="sections-performance"></div>
+</div>
+<div class="text-center">
+<button id="sendEmailBtn" onclick="sendResultsToEmail()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white text-lg px-8 py-3 rounded-2xl font-bold shadow-xl transition">📧 <span data-ar="أرسل النتيجة للمعلم" data-en="Send Result to Teacher">أرسل النتيجة للمعلم</span></button>
+<p id="emailStatus" class="text-sm mt-2 text-center font-medium"></p>
+</div>
+</div>
+
+<footer class="max-w-5xl mx-auto mt-10 mb-8 text-center text-gray-500 text-sm no-print">
+© Composition of Functions - Grade 11 Advanced | Mr. Mohammed Hesham 📐
+</footer>
+
+<script>
+const PUBLIC_KEY = "Rb3Lq8tXaFmc5YHUH";
+const SERVICE_ID = "service_w15m64i";
+const TEMPLATE_ID = "template_5b0u2tq";
+const TARGET_EMAIL = "mohammedhesham872@gmail.com";
+emailjs.init(PUBLIC_KEY);
+
+const STORAGE_KEY = 'composition_functions_grade11_v1';
+const TOTAL_TIME = 4500;
+const TOTAL_QUESTIONS = 30;
+const TOTAL_SECTIONS = 6;
+const QUESTIONS_PER_SECTION = 5;
+
+let currentSeed = null;
+let answersVisible = false;
+let saveIndicatorTimeout = null;
+let currentLang = 'ar';
+let timeRemaining = TOTAL_TIME;
+let timerInterval;
+let examData;
+let correctAnswersMap = {};
+let rng = null;
+
+function mulberry32(a) {
+    return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
+function showSaveIndicator() {
+    const indicator = document.getElementById('saveIndicator');
+    indicator.classList.add('show');
+    if (saveIndicatorTimeout) clearTimeout(saveIndicatorTimeout);
+    saveIndicatorTimeout = setTimeout(() => indicator.classList.remove('show'), 1500);
+}
+
+function saveState(showIndicator = true) {
+    try {
+        const state = {
+            seed: currentSeed, lang: currentLang,
+            studentName: document.getElementById('studentName').value,
+            studentClass: document.getElementById('studentClass').value,
+            examDate: document.getElementById('examDate').value,
+            answers: getSelectedAnswers(),
+            timeRemaining: timeRemaining,
+            answersVisible: answersVisible, savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (showIndicator) showSaveIndicator();
+    } catch (e) { console.error('Save error:', e); }
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+}
+
+function getSelectedAnswers() {
+    const answers = {};
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const selected = document.querySelector('input[name="q'+i+'"]:checked');
+        if (selected) answers[i] = selected.value;
+    }
+    return answers;
+}
+
+function restoreAnswers(answers) {
+    if (!answers) return;
+    for (const [idx, val] of Object.entries(answers)) {
+        const radio = document.querySelector('input[name="q'+idx+'"][value="'+val+'"]');
+        if (radio) radio.checked = true;
+    }
+}
+
+function clearProgress() {
+    const msg = currentLang === 'ar' ? '⚠️ هل أنت متأكد من مسح كل التقدم؟' : '⚠️ Clear all progress?';
+    if (confirm(msg)) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+}
+
+function setupAnswerListeners() {
+    document.getElementById('exam-content').addEventListener('change', (e) => {
+        if (e.target.type === 'radio') saveState();
+    });
+}
+
+function setupInputListeners() {
+    ['studentName', 'studentClass', 'examDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => saveState(false));
+            el.addEventListener('blur', () => saveState());
+        }
+    });
+}
+
+// ==================== SVG DIAGRAMS - ACCURATE GRAPHS ====================
+const svgGraphs = {
+    composition_flow: `<svg class="svg-graph" width="450" height="200" viewBox="0 0 450 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="440" height="190" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="225" y="25" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">🔄 تركيب الدوال - Function Composition</text>
+        <!-- Input x -->
+        <circle cx="50" cy="100" r="25" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="50" y="105" text-anchor="middle" font-size="14" fill="#92400e" font-weight="bold">x</text>
+        <!-- Arrow to g -->
+        <line x1="75" y1="100" x2="120" y2="100" stroke="#374151" stroke-width="2" marker-end="url(#arrow1)"/>
+        <!-- Function g -->
+        <rect x="120" y="75" width="80" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="160" y="105" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">g(x)</text>
+        <!-- Arrow to f -->
+        <line x1="200" y1="100" x2="245" y2="100" stroke="#374151" stroke-width="2" marker-end="url(#arrow1)"/>
+        <!-- Function f -->
+        <rect x="245" y="75" width="80" height="50" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="285" y="105" text-anchor="middle" font-size="12" fill="#9f1239" font-weight="bold">f(g(x))</text>
+        <!-- Arrow to output -->
+        <line x1="325" y1="100" x2="370" y2="100" stroke="#374151" stroke-width="2" marker-end="url(#arrow1)"/>
+        <!-- Output -->
+        <circle cx="400" cy="100" r="25" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="400" y="105" text-anchor="middle" font-size="12" fill="#166534" font-weight="bold">[f∘g](x)</text>
+        <!-- Formula -->
+        <text x="225" y="150" text-anchor="middle" font-size="13" fill="#92400e" font-family="'Amiri', serif" font-weight="bold">[f ∘ g](x) = f(g(x))</text>
+        <text x="225" y="175" text-anchor="middle" font-size="11" fill="#92400e">Apply g first, then apply f to the result</text>
+        <defs><marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#374151"/></marker></defs>
+    </svg>`,
+    
+    ex2_solution: `<svg class="svg-graph" width="500" height="320" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="490" height="310" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+        <text x="250" y="25" text-anchor="middle" font-size="14" fill="#1e40af" font-weight="bold">📝 مثال 2: f(x) = x² + 1, g(x) = x - 4</text>
+        <!-- Part a -->
+        <rect x="20" y="45" width="460" height="60" rx="6" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="250" y="65" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">a. [f ∘ g](x) = f(g(x)) = f(x - 4)</text>
+        <text x="250" y="85" text-anchor="middle" font-size="11" fill="#1e40af">= (x - 4)² + 1 = x² - 8x + 16 + 1 = x² - 8x + 17</text>
+        <!-- Part b -->
+        <rect x="20" y="115" width="460" height="60" rx="6" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="250" y="135" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">b. [g ∘ f](x) = g(f(x)) = g(x² + 1)</text>
+        <text x="250" y="155" text-anchor="middle" font-size="11" fill="#1e40af">= (x² + 1) - 4 = x² - 3</text>
+        <!-- Part c -->
+        <rect x="20" y="185" width="460" height="60" rx="6" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+        <text x="250" y="205" text-anchor="middle" font-size="12" fill="#1e40af" font-weight="bold">c. [f ∘ g](2) = f(g(2))</text>
+        <text x="250" y="225" text-anchor="middle" font-size="11" fill="#1e40af">g(2) = 2 - 4 = -2, f(-2) = (-2)² + 1 = 5</text>
+        <!-- Summary -->
+        <rect x="20" y="255" width="460" height="50" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="250" y="275" text-anchor="middle" font-size="11" fill="#92400e" font-weight="bold">Summary: [f∘g](x) = x² - 8x + 17, [g∘f](x) = x² - 3, [f∘g](2) = 5</text>
+        <text x="250" y="295" text-anchor="middle" font-size="10" fill="#92400e">Note: [f∘g](x) ≠ [g∘f](x) in general (composition is not commutative)</text>
+    </svg>`,
+    
+    ex2A_solution: `<svg class="svg-graph" width="500" height="340" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="490" height="330" rx="12" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+        <text x="250" y="25" text-anchor="middle" font-size="14" fill="#9f1239" font-weight="bold">📝 تمرين 2A: f(x) = 3x + 1, g(x) = 5 - x²</text>
+        <!-- Part 1 -->
+        <rect x="20" y="45" width="460" height="65" rx="6" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="250" y="65" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="bold">[f ∘ g](x) = f(g(x)) = f(5 - x²)</text>
+        <text x="250" y="85" text-anchor="middle" font-size="11" fill="#9f1239">= 3(5 - x²) + 1 = 15 - 3x² + 1 = 16 - 3x²</text>
+        <!-- Part 2 -->
+        <rect x="20" y="120" width="460" height="65" rx="6" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="250" y="140" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="bold">[g ∘ f](x) = g(f(x)) = g(3x + 1)</text>
+        <text x="250" y="160" text-anchor="middle" font-size="11" fill="#9f1239">= 5 - (3x + 1)² = 5 - (9x² + 6x + 1) = 4 - 9x² - 6x</text>
+        <!-- Part 3 -->
+        <rect x="20" y="195" width="460" height="65" rx="6" fill="#fbcfe8" stroke="#ec4899" stroke-width="2"/>
+        <text x="250" y="215" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="bold">[f ∘ g](3) = f(g(3))</text>
+        <text x="250" y="235" text-anchor="middle" font-size="11" fill="#9f1239">g(3) = 5 - 9 = -4, f(-4) = 3(-4) + 1 = -11</text>
+        <!-- Summary -->
+        <rect x="20" y="270" width="460" height="55" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="250" y="290" text-anchor="middle" font-size="11" fill="#92400e" font-weight="bold">Summary: [f∘g](x) = 16 - 3x², [g∘f](x) = 4 - 9x² - 6x, [f∘g](3) = -11</text>
+        <text x="250" y="310" text-anchor="middle" font-size="10" fill="#92400e">Alternative: [f∘g](3) = 16 - 3(9) = 16 - 27 = -11 ✓</text>
+    </svg>`,
+    
+    ex2B_solution: `<svg class="svg-graph" width="500" height="320" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="490" height="310" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="25" text-anchor="middle" font-size="14" fill="#065f46" font-weight="bold">📝 تمرين 2B: f(x) = 6x² - 4, g(x) = x + 2</text>
+        <!-- Part 1 -->
+        <rect x="20" y="45" width="460" height="65" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="65" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">[f ∘ g](x) = f(g(x)) = f(x + 2)</text>
+        <text x="250" y="85" text-anchor="middle" font-size="11" fill="#065f46">= 6(x + 2)² - 4 = 6(x² + 4x + 4) - 4 = 6x² + 24x + 20</text>
+        <!-- Part 2 -->
+        <rect x="20" y="120" width="460" height="65" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="140" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">[g ∘ f](x) = g(f(x)) = g(6x² - 4)</text>
+        <text x="250" y="160" text-anchor="middle" font-size="11" fill="#065f46">= (6x² - 4) + 2 = 6x² - 2</text>
+        <!-- Part 3 -->
+        <rect x="20" y="195" width="460" height="65" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+        <text x="250" y="215" text-anchor="middle" font-size="11" fill="#065f46" font-weight="bold">Example: [f ∘ g](1) = f(g(1))</text>
+        <text x="250" y="235" text-anchor="middle" font-size="11" fill="#065f46">g(1) = 3, f(3) = 6(9) - 4 = 50. Or: 6(1) + 24(1) + 20 = 50 ✓</text>
+        <!-- Summary -->
+        <rect x="20" y="270" width="460" height="35" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="250" y="292" text-anchor="middle" font-size="11" fill="#92400e" font-weight="bold">Summary: [f∘g](x) = 6x² + 24x + 20, [g∘f](x) = 6x² - 2</text>
+    </svg>`,
+    
+    composition_not_commutative: `<svg class="svg-graph" width="450" height="260" viewBox="0 0 450 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="440" height="250" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="225" y="25" text-anchor="middle" font-size="14" fill="#5b21b6" font-weight="bold">⚠️ التركيب ليس تبديلياً - Not Commutative</text>
+        <!-- f∘g path -->
+        <rect x="20" y="50" width="200" height="80" rx="6" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="120" y="75" text-anchor="middle" font-size="12" fill="#5b21b6" font-weight="bold">[f ∘ g](x)</text>
+        <text x="120" y="95" text-anchor="middle" font-size="11" fill="#5b21b6">= f(g(x))</text>
+        <text x="120" y="115" text-anchor="middle" font-size="10" fill="#5b21b6">Apply g FIRST</text>
+        <text x="120" y="130" text-anchor="middle" font-size="10" fill="#5b21b6">ثم طبق f</text>
+        <!-- g∘f path -->
+        <rect x="230" y="50" width="200" height="80" rx="6" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="330" y="75" text-anchor="middle" font-size="12" fill="#5b21b6" font-weight="bold">[g ∘ f](x)</text>
+        <text x="330" y="95" text-anchor="middle" font-size="11" fill="#5b21b6">= g(f(x))</text>
+        <text x="330" y="115" text-anchor="middle" font-size="10" fill="#5b21b6">Apply f FIRST</text>
+        <text x="330" y="130" text-anchor="middle" font-size="10" fill="#5b21b6">ثم طبق g</text>
+        <!-- Not equal sign -->
+        <text x="225" y="165" text-anchor="middle" font-size="20" fill="#dc2626" font-weight="bold">≠</text>
+        <text x="225" y="185" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">Generally NOT equal!</text>
+        <!-- Example -->
+        <rect x="20" y="200" width="410" height="45" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="225" y="220" text-anchor="middle" font-size="10" fill="#92400e">Example: f(x) = x+1, g(x) = 2x</text>
+        <text x="225" y="238" text-anchor="middle" font-size="10" fill="#92400e">[f∘g](x) = 2x+1, but [g∘f](x) = 2(x+1) = 2x+2</text>
+    </svg>`,
+    
+    evaluation_steps: `<svg class="svg-graph" width="450" height="280" viewBox="0 0 450 280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="440" height="270" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+        <text x="225" y="25" text-anchor="middle" font-size="14" fill="#991b1b" font-weight="bold">🎯 خطوات التقييم - Evaluation Steps</text>
+        <!-- Step 1 -->
+        <rect x="20" y="45" width="400" height="50" rx="6" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
+        <text x="220" y="65" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="bold">Step 1: Evaluate inner function first</text>
+        <text x="220" y="85" text-anchor="middle" font-size="10" fill="#991b1b">احسب الدالة الداخلية أولاً: g(a)</text>
+        <!-- Step 2 -->
+        <rect x="20" y="105" width="400" height="50" rx="6" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
+        <text x="220" y="125" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="bold">Step 2: Use result as input to outer function</text>
+        <text x="220" y="145" text-anchor="middle" font-size="10" fill="#991b1b">استخدم النتيجة كمدخل للدالة الخارجية: f(g(a))</text>
+        <!-- Step 3 -->
+        <rect x="20" y="165" width="400" height="50" rx="6" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
+        <text x="220" y="185" text-anchor="middle" font-size="11" fill="#991b1b" font-weight="bold">Step 3: Simplify to get final answer</text>
+        <text x="220" y="205" text-anchor="middle" font-size="10" fill="#991b1b">بسّط للحصول على الإجابة النهائية</text>
+        <!-- Example -->
+        <rect x="20" y="225" width="400" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <text x="220" y="245" text-anchor="middle" font-size="11" fill="#92400e" font-weight="bold">Example: [f∘g](2) where f(x)=x²+1, g(x)=x-4</text>
+        <text x="220" y="260" text-anchor="middle" font-size="10" fill="#92400e">g(2) = -2, then f(-2) = 4+1 = 5</text>
+    </svg>`
+};
+
+// ==================== EXAM DATA - 30 QUESTIONS ====================
+const originalExamData = {
+    sections: [
+        {
+            id: 'sec1',
+            title: { ar: '🔹 القسم 1: مثال 2 - f(x) = x² + 1, g(x) = x - 4 (Q1-Q5)', en: '🔹 Section 1: Example 2 - f(x) = x² + 1, g(x) = x - 4 (Q1-Q5)' },
+            questions: [
+                {
+                    q: { ar: '<strong>مثال 2a:</strong> f(x) = x² + 1, g(x) = x - 4. ما [f ∘ g](x)؟', en: '<strong>Example 2a:</strong> f(x) = x² + 1, g(x) = x - 4. What is [f ∘ g](x)?' },
+                    svg: svgGraphs.ex2_solution,
+                    options: [
+                        { ar: '<span class="math-display">x² - 8x + 17</span>', en: '<span class="math-display">x² - 8x + 17</span>' },
+                        { ar: '<span class="math-display">x² - 3</span>', en: '<span class="math-display">x² - 3</span>' },
+                        { ar: '<span class="math-display">x² - 8x + 16</span>', en: '<span class="math-display">x² - 8x + 16</span>' },
+                        { ar: '<span class="math-display">x² + 4x + 17</span>', en: '<span class="math-display">x² + 4x + 17</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(x-4) = (x-4)² + 1 = x² - 8x + 16 + 1 = x² - 8x + 17', en: '[f ∘ g](x) = f(x-4) = (x-4)² + 1 = x² - 8x + 17' }
+                },
+                {
+                    q: { ar: '<strong>مثال 2b:</strong> نفس الدالتين. ما [g ∘ f](x)؟', en: '<strong>Example 2b:</strong> Same functions. What is [g ∘ f](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">x² - 3</span>', en: '<span class="math-display">x² - 3</span>' },
+                        { ar: '<span class="math-display">x² - 8x + 17</span>', en: '<span class="math-display">x² - 8x + 17</span>' },
+                        { ar: '<span class="math-display">x² + 4x - 3</span>', en: '<span class="math-display">x² + 4x - 3</span>' },
+                        { ar: '<span class="math-display">x² - 4x + 1</span>', en: '<span class="math-display">x² - 4x + 1</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[g ∘ f](x) = g(x²+1) = (x²+1) - 4 = x² - 3', en: '[g ∘ f](x) = g(x²+1) = (x²+1) - 4 = x² - 3' }
+                },
+                {
+                    q: { ar: '<strong>مثال 2c:</strong> نفس الدالتين. ما [f ∘ g](2)؟', en: '<strong>Example 2c:</strong> Same functions. What is [f ∘ g](2)?' },
+                    options: [
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">-3</span>', en: '<span class="math-display">-3</span>' },
+                        { ar: '<span class="math-display">17</span>', en: '<span class="math-display">17</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(2) = 2-4 = -2, f(-2) = (-2)² + 1 = 4 + 1 = 5', en: 'g(2) = -2, f(-2) = 4 + 1 = 5' }
+                },
+                {
+                    q: { ar: '<strong>س4:</strong> هل [f ∘ g](x) = [g ∘ f](x) دائماً؟', en: '<strong>Q4:</strong> Is [f ∘ g](x) = [g ∘ f](x) always?' },
+                    svg: svgGraphs.composition_not_commutative,
+                    options: [
+                        { ar: 'لا، التركيب ليس تبديلياً بشكل عام', en: 'No, composition is not commutative in general' },
+                        { ar: 'نعم، دائماً', en: 'Yes, always' },
+                        { ar: 'نعم، للدوال الخطية فقط', en: 'Yes, only for linear functions' },
+                        { ar: 'لا يمكن التحديد', en: 'Cannot determine' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'لا، [f ∘ g](x) ≠ [g ∘ f](x) بشكل عام. التركيب ليس عملية تبديلية', en: 'No, [f ∘ g](x) ≠ [g ∘ f](x) in general. Composition is not commutative' }
+                },
+                {
+                    q: { ar: '<strong>س5:</strong> ما [g ∘ f](2) لنفس الدالتين في مثال 2؟', en: '<strong>Q5:</strong> What is [g ∘ f](2) for same functions in Example 2?' },
+                    options: [
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">-2</span>', en: '<span class="math-display">-2</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[g ∘ f](x) = x² - 3, إذن [g ∘ f](2) = 4 - 3 = 1', en: '[g ∘ f](x) = x² - 3, so [g ∘ f](2) = 4 - 3 = 1' }
+                }
+            ]
+        },
+        {
+            id: 'sec2',
+            title: { ar: '🔹 القسم 2: تمرين 2A - f(x) = 3x + 1, g(x) = 5 - x² (Q6-Q10)', en: '🔹 Section 2: Exercise 2A - f(x) = 3x + 1, g(x) = 5 - x² (Q6-Q10)' },
+            questions: [
+                {
+                    q: { ar: '<strong>تمرين 2A:</strong> f(x) = 3x + 1, g(x) = 5 - x². ما [f ∘ g](x)؟', en: '<strong>Exercise 2A:</strong> f(x) = 3x + 1, g(x) = 5 - x². What is [f ∘ g](x)?' },
+                    svg: svgGraphs.ex2A_solution,
+                    options: [
+                        { ar: '<span class="math-display">16 - 3x²</span>', en: '<span class="math-display">16 - 3x²</span>' },
+                        { ar: '<span class="math-display">15 - 3x²</span>', en: '<span class="math-display">15 - 3x²</span>' },
+                        { ar: '<span class="math-display">16 - x²</span>', en: '<span class="math-display">16 - x²</span>' },
+                        { ar: '<span class="math-display">3x² + 16</span>', en: '<span class="math-display">3x² + 16</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(5-x²) = 3(5-x²) + 1 = 15 - 3x² + 1 = 16 - 3x²', en: '[f ∘ g](x) = 3(5-x²) + 1 = 16 - 3x²' }
+                },
+                {
+                    q: { ar: '<strong>تمرين 2A:</strong> ما [g ∘ f](x)؟', en: '<strong>Exercise 2A:</strong> What is [g ∘ f](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">4 - 9x² - 6x</span>', en: '<span class="math-display">4 - 9x² - 6x</span>' },
+                        { ar: '<span class="math-display">5 - 9x² - 6x</span>', en: '<span class="math-display">5 - 9x² - 6x</span>' },
+                        { ar: '<span class="math-display">4 - 9x²</span>', en: '<span class="math-display">4 - 9x²</span>' },
+                        { ar: '<span class="math-display">5 - (3x+1)²</span>', en: '<span class="math-display">5 - (3x+1)²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[g ∘ f](x) = g(3x+1) = 5 - (3x+1)² = 5 - (9x²+6x+1) = 4 - 9x² - 6x', en: '[g ∘ f](x) = 5 - (3x+1)² = 4 - 9x² - 6x' }
+                },
+                {
+                    q: { ar: '<strong>تمرين 2A:</strong> ما [f ∘ g](3)؟', en: '<strong>Exercise 2A:</strong> What is [f ∘ g](3)?' },
+                    options: [
+                        { ar: '<span class="math-display">-11</span>', en: '<span class="math-display">-11</span>' },
+                        { ar: '<span class="math-display">11</span>', en: '<span class="math-display">11</span>' },
+                        { ar: '<span class="math-display">-16</span>', en: '<span class="math-display">-16</span>' },
+                        { ar: '<span class="math-display">16</span>', en: '<span class="math-display">16</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(3) = 5 - 9 = -4, f(-4) = 3(-4) + 1 = -12 + 1 = -11', en: 'g(3) = -4, f(-4) = -11' }
+                },
+                {
+                    q: { ar: '<strong>س9:</strong> ما [g ∘ f](0)؟', en: '<strong>Q9:</strong> What is [g ∘ f](0)?' },
+                    options: [
+                        { ar: '<span class="math-display">4</span>', en: '<span class="math-display">4</span>' },
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(0) = 1, g(1) = 5 - 1 = 4. أو: [g∘f](0) = 4 - 0 - 0 = 4', en: 'f(0) = 1, g(1) = 4. Or: [g∘f](0) = 4' }
+                },
+                {
+                    q: { ar: '<strong>س10:</strong> ما [f ∘ g](0)؟', en: '<strong>Q10:</strong> What is [f ∘ g](0)?' },
+                    options: [
+                        { ar: '<span class="math-display">16</span>', en: '<span class="math-display">16</span>' },
+                        { ar: '<span class="math-display">15</span>', en: '<span class="math-display">15</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(0) = 5, f(5) = 3(5) + 1 = 16. أو: [f∘g](0) = 16 - 0 = 16', en: 'g(0) = 5, f(5) = 16. Or: [f∘g](0) = 16' }
+                }
+            ]
+        },
+        {
+            id: 'sec3',
+            title: { ar: '🔹 القسم 3: تمرين 2B - f(x) = 6x² - 4, g(x) = x + 2 (Q11-Q15)', en: '🔹 Section 3: Exercise 2B - f(x) = 6x² - 4, g(x) = x + 2 (Q11-Q15)' },
+            questions: [
+                {
+                    q: { ar: '<strong>تمرين 2B:</strong> f(x) = 6x² - 4, g(x) = x + 2. ما [f ∘ g](x)؟', en: '<strong>Exercise 2B:</strong> f(x) = 6x² - 4, g(x) = x + 2. What is [f ∘ g](x)?' },
+                    svg: svgGraphs.ex2B_solution,
+                    options: [
+                        { ar: '<span class="math-display">6x² + 24x + 20</span>', en: '<span class="math-display">6x² + 24x + 20</span>' },
+                        { ar: '<span class="math-display">6x² + 24x + 16</span>', en: '<span class="math-display">6x² + 24x + 16</span>' },
+                        { ar: '<span class="math-display">6x² + 4x + 20</span>', en: '<span class="math-display">6x² + 4x + 20</span>' },
+                        { ar: '<span class="math-display">6x² - 4x + 20</span>', en: '<span class="math-display">6x² - 4x + 20</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(x+2) = 6(x+2)² - 4 = 6(x²+4x+4) - 4 = 6x² + 24x + 24 - 4 = 6x² + 24x + 20', en: '[f ∘ g](x) = 6(x+2)² - 4 = 6x² + 24x + 20' }
+                },
+                {
+                    q: { ar: '<strong>تمرين 2B:</strong> ما [g ∘ f](x)؟', en: '<strong>Exercise 2B:</strong> What is [g ∘ f](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">6x² - 2</span>', en: '<span class="math-display">6x² - 2</span>' },
+                        { ar: '<span class="math-display">6x² + 2</span>', en: '<span class="math-display">6x² + 2</span>' },
+                        { ar: '<span class="math-display">6x² - 4</span>', en: '<span class="math-display">6x² - 4</span>' },
+                        { ar: '<span class="math-display">6x² + 4</span>', en: '<span class="math-display">6x² + 4</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[g ∘ f](x) = g(6x²-4) = (6x²-4) + 2 = 6x² - 2', en: '[g ∘ f](x) = (6x²-4) + 2 = 6x² - 2' }
+                },
+                {
+                    q: { ar: '<strong>س13:</strong> ما [f ∘ g](1)؟', en: '<strong>Q13:</strong> What is [f ∘ g](1)?' },
+                    options: [
+                        { ar: '<span class="math-display">50</span>', en: '<span class="math-display">50</span>' },
+                        { ar: '<span class="math-display">26</span>', en: '<span class="math-display">26</span>' },
+                        { ar: '<span class="math-display">30</span>', en: '<span class="math-display">30</span>' },
+                        { ar: '<span class="math-display">20</span>', en: '<span class="math-display">20</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(1) = 3, f(3) = 6(9) - 4 = 54 - 4 = 50. أو: 6(1) + 24(1) + 20 = 50', en: 'g(1) = 3, f(3) = 50. Or: 6 + 24 + 20 = 50' }
+                },
+                {
+                    q: { ar: '<strong>س14:</strong> ما [g ∘ f](0)؟', en: '<strong>Q14:</strong> What is [g ∘ f](0)?' },
+                    options: [
+                        { ar: '<span class="math-display">-2</span>', en: '<span class="math-display">-2</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: '<span class="math-display">-4</span>', en: '<span class="math-display">-4</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(0) = -4, g(-4) = -4 + 2 = -2. أو: 6(0) - 2 = -2', en: 'f(0) = -4, g(-4) = -2. Or: 6(0) - 2 = -2' }
+                },
+                {
+                    q: { ar: '<strong>س15:</strong> ما [f ∘ g](-2)؟', en: '<strong>Q15:</strong> What is [f ∘ g](-2)?' },
+                    options: [
+                        { ar: '<span class="math-display">-4</span>', en: '<span class="math-display">-4</span>' },
+                        { ar: '<span class="math-display">20</span>', en: '<span class="math-display">20</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">44</span>', en: '<span class="math-display">44</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(-2) = 0, f(0) = -4. أو: 6(4) + 24(-2) + 20 = 24 - 48 + 20 = -4', en: 'g(-2) = 0, f(0) = -4. Or: 24 - 48 + 20 = -4' }
+                }
+            ]
+        },
+        {
+            id: 'sec4',
+            title: { ar: '🔹 القسم 4: أسئلة مشابهة - دوال خطية وتربيعية (Q16-Q20)', en: '🔹 Section 4: Similar Questions - Linear & Quadratic (Q16-Q20)' },
+            questions: [
+                {
+                    q: { ar: '<strong>س16:</strong> f(x) = 2x + 3, g(x) = x². ما [f ∘ g](x)؟', en: '<strong>Q16:</strong> f(x) = 2x + 3, g(x) = x². What is [f ∘ g](x)?' },
+                    svg: svgGraphs.composition_flow,
+                    options: [
+                        { ar: '<span class="math-display">2x² + 3</span>', en: '<span class="math-display">2x² + 3</span>' },
+                        { ar: '<span class="math-display">4x² + 3</span>', en: '<span class="math-display">4x² + 3</span>' },
+                        { ar: '<span class="math-display">2x + 3</span>', en: '<span class="math-display">2x + 3</span>' },
+                        { ar: '<span class="math-display">(2x+3)²</span>', en: '<span class="math-display">(2x+3)²</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(x²) = 2(x²) + 3 = 2x² + 3', en: '[f ∘ g](x) = f(x²) = 2x² + 3' }
+                },
+                {
+                    q: { ar: '<strong>س17:</strong> f(x) = 2x + 3, g(x) = x². ما [g ∘ f](x)؟', en: '<strong>Q17:</strong> f(x) = 2x + 3, g(x) = x². What is [g ∘ f](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">(2x + 3)² = 4x² + 12x + 9</span>', en: '<span class="math-display">(2x + 3)² = 4x² + 12x + 9</span>' },
+                        { ar: '<span class="math-display">2x² + 3</span>', en: '<span class="math-display">2x² + 3</span>' },
+                        { ar: '<span class="math-display">4x² + 9</span>', en: '<span class="math-display">4x² + 9</span>' },
+                        { ar: '<span class="math-display">2x² + 12x + 9</span>', en: '<span class="math-display">2x² + 12x + 9</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[g ∘ f](x) = g(2x+3) = (2x+3)² = 4x² + 12x + 9', en: '[g ∘ f](x) = (2x+3)² = 4x² + 12x + 9' }
+                },
+                {
+                    q: { ar: '<strong>س18:</strong> f(x) = x - 1, g(x) = 2x + 5. ما [f ∘ g](x)؟', en: '<strong>Q18:</strong> f(x) = x - 1, g(x) = 2x + 5. What is [f ∘ g](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">2x + 4</span>', en: '<span class="math-display">2x + 4</span>' },
+                        { ar: '<span class="math-display">2x + 5</span>', en: '<span class="math-display">2x + 5</span>' },
+                        { ar: '<span class="math-display">2x - 1</span>', en: '<span class="math-display">2x - 1</span>' },
+                        { ar: '<span class="math-display">x + 4</span>', en: '<span class="math-display">x + 4</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(2x+5) = (2x+5) - 1 = 2x + 4', en: '[f ∘ g](x) = (2x+5) - 1 = 2x + 4' }
+                },
+                {
+                    q: { ar: '<strong>س19:</strong> f(x) = x², g(x) = x + 1. ما [f ∘ g](3)؟', en: '<strong>Q19:</strong> f(x) = x², g(x) = x + 1. What is [f ∘ g](3)?' },
+                    options: [
+                        { ar: '<span class="math-display">16</span>', en: '<span class="math-display">16</span>' },
+                        { ar: '<span class="math-display">10</span>', en: '<span class="math-display">10</span>' },
+                        { ar: '<span class="math-display">9</span>', en: '<span class="math-display">9</span>' },
+                        { ar: '<span class="math-display">12</span>', en: '<span class="math-display">12</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(3) = 4, f(4) = 16. أو: [f∘g](x) = (x+1)², [f∘g](3) = 16', en: 'g(3) = 4, f(4) = 16. Or: [f∘g](3) = (3+1)² = 16' }
+                },
+                {
+                    q: { ar: '<strong>س20:</strong> f(x) = 1/x, g(x) = x + 2. ما [f ∘ g](x)؟', en: '<strong>Q20:</strong> f(x) = 1/x, g(x) = x + 2. What is [f ∘ g](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/(x + 2)</span>', en: '<span class="math-display">1/(x + 2)</span>' },
+                        { ar: '<span class="math-display">1/x + 2</span>', en: '<span class="math-display">1/x + 2</span>' },
+                        { ar: '<span class="math-display">(x + 2)/x</span>', en: '<span class="math-display">(x + 2)/x</span>' },
+                        { ar: '<span class="math-display">x/(x + 2)</span>', en: '<span class="math-display">x/(x + 2)</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f ∘ g](x) = f(x+2) = 1/(x+2)', en: '[f ∘ g](x) = f(x+2) = 1/(x+2)' }
+                }
+            ]
+        },
+        {
+            id: 'sec5',
+            title: { ar: '🔹 القسم 5: تقييم التركيب عند نقاط (Q21-Q25)', en: '🔹 Section 5: Evaluating Compositions at Points (Q21-Q25)' },
+            questions: [
+                {
+                    q: { ar: '<strong>س21:</strong> f(x) = x² - 1, g(x) = 2x. ما [f ∘ g](3)؟', en: '<strong>Q21:</strong> f(x) = x² - 1, g(x) = 2x. What is [f ∘ g](3)?' },
+                    svg: svgGraphs.evaluation_steps,
+                    options: [
+                        { ar: '<span class="math-display">35</span>', en: '<span class="math-display">35</span>' },
+                        { ar: '<span class="math-display">8</span>', en: '<span class="math-display">8</span>' },
+                        { ar: '<span class="math-display">17</span>', en: '<span class="math-display">17</span>' },
+                        { ar: '<span class="math-display">36</span>', en: '<span class="math-display">36</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(3) = 6, f(6) = 36 - 1 = 35', en: 'g(3) = 6, f(6) = 35' }
+                },
+                {
+                    q: { ar: '<strong>س22:</strong> f(x) = x² - 1, g(x) = 2x. ما [g ∘ f](3)؟', en: '<strong>Q22:</strong> f(x) = x² - 1, g(x) = 2x. What is [g ∘ f](3)?' },
+                    options: [
+                        { ar: '<span class="math-display">16</span>', en: '<span class="math-display">16</span>' },
+                        { ar: '<span class="math-display">18</span>', en: '<span class="math-display">18</span>' },
+                        { ar: '<span class="math-display">8</span>', en: '<span class="math-display">8</span>' },
+                        { ar: '<span class="math-display">17</span>', en: '<span class="math-display">17</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(3) = 8, g(8) = 16', en: 'f(3) = 8, g(8) = 16' }
+                },
+                {
+                    q: { ar: '<strong>س23:</strong> f(x) = √x, g(x) = x² + 1. ما [f ∘ g](0)؟', en: '<strong>Q23:</strong> f(x) = √x, g(x) = x² + 1. What is [f ∘ g](0)?' },
+                    options: [
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">0</span>', en: '<span class="math-display">0</span>' },
+                        { ar: '<span class="math-display">√2</span>', en: '<span class="math-display">√2</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(0) = 1, f(1) = √1 = 1', en: 'g(0) = 1, f(1) = 1' }
+                },
+                {
+                    q: { ar: '<strong>س24:</strong> f(x) = |x|, g(x) = x - 3. ما [f ∘ g](-2)؟', en: '<strong>Q24:</strong> f(x) = |x|, g(x) = x - 3. What is [f ∘ g](-2)?' },
+                    options: [
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">-5</span>', en: '<span class="math-display">-5</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(-2) = -5, f(-5) = |-5| = 5', en: 'g(-2) = -5, f(-5) = |-5| = 5' }
+                },
+                {
+                    q: { ar: '<strong>س25:</strong> f(x) = 2x + 1, g(x) = x². ما [g ∘ f](2)؟', en: '<strong>Q25:</strong> f(x) = 2x + 1, g(x) = x². What is [g ∘ f](2)?' },
+                    options: [
+                        { ar: '<span class="math-display">25</span>', en: '<span class="math-display">25</span>' },
+                        { ar: '<span class="math-display">9</span>', en: '<span class="math-display">9</span>' },
+                        { ar: '<span class="math-display">10</span>', en: '<span class="math-display">10</span>' },
+                        { ar: '<span class="math-display">17</span>', en: '<span class="math-display">17</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(2) = 5, g(5) = 25', en: 'f(2) = 5, g(5) = 25' }
+                }
+            ]
+        },
+        {
+            id: 'sec6',
+            title: { ar: '🔹 القسم 6: مسائل مركبة وتطبيقات (Q26-Q30)', en: '🔹 Section 6: Mixed Problems & Applications (Q26-Q30)' },
+            questions: [
+                {
+                    q: { ar: '<strong>س26:</strong> إذا [f ∘ g](x) = 2x + 3 و g(x) = x + 1، فما f(x)؟', en: '<strong>Q26:</strong> If [f ∘ g](x) = 2x + 3 and g(x) = x + 1, what is f(x)?' },
+                    options: [
+                        { ar: '<span class="math-display">f(x) = 2x + 1</span>', en: '<span class="math-display">f(x) = 2x + 1</span>' },
+                        { ar: '<span class="math-display">f(x) = 2x + 3</span>', en: '<span class="math-display">f(x) = 2x + 3</span>' },
+                        { ar: '<span class="math-display">f(x) = x + 2</span>', en: '<span class="math-display">f(x) = x + 2</span>' },
+                        { ar: '<span class="math-display">f(x) = 2x - 1</span>', en: '<span class="math-display">f(x) = 2x - 1</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'f(g(x)) = 2x + 3, g(x) = x+1. إذن f(x+1) = 2x+3 = 2(x+1)+1. لذا f(x) = 2x + 1', en: 'f(x+1) = 2x+3 = 2(x+1)+1. So f(x) = 2x + 1' }
+                },
+                {
+                    q: { ar: '<strong>س27:</strong> f(x) = x², g(x) = x + 2, h(x) = 2x. ما [f ∘ g ∘ h](1)؟', en: '<strong>Q27:</strong> f(x) = x², g(x) = x + 2, h(x) = 2x. What is [f ∘ g ∘ h](1)?' },
+                    options: [
+                        { ar: '<span class="math-display">16</span>', en: '<span class="math-display">16</span>' },
+                        { ar: '<span class="math-display">9</span>', en: '<span class="math-display">9</span>' },
+                        { ar: '<span class="math-display">4</span>', en: '<span class="math-display">4</span>' },
+                        { ar: '<span class="math-display">36</span>', en: '<span class="math-display">36</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'h(1) = 2, g(2) = 4, f(4) = 16', en: 'h(1) = 2, g(2) = 4, f(4) = 16' }
+                },
+                {
+                    q: { ar: '<strong>س28:</strong> f(x) = 1/(x-1), g(x) = x + 1. ما [f ∘ g](2)؟', en: '<strong>Q28:</strong> f(x) = 1/(x-1), g(x) = x + 1. What is [f ∘ g](2)?' },
+                    options: [
+                        { ar: '<span class="math-display">1/2</span>', en: '<span class="math-display">1/2</span>' },
+                        { ar: '<span class="math-display">1</span>', en: '<span class="math-display">1</span>' },
+                        { ar: '<span class="math-display">2</span>', en: '<span class="math-display">2</span>' },
+                        { ar: 'غير معرّفة', en: 'Undefined' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(2) = 3, f(3) = 1/(3-1) = 1/2', en: 'g(2) = 3, f(3) = 1/2' }
+                },
+                {
+                    q: { ar: '<strong>س29:</strong> f(x) = x² - 4, g(x) = √x. ما [f ∘ g](9)؟', en: '<strong>Q29:</strong> f(x) = x² - 4, g(x) = √x. What is [f ∘ g](9)?' },
+                    options: [
+                        { ar: '<span class="math-display">5</span>', en: '<span class="math-display">5</span>' },
+                        { ar: '<span class="math-display">77</span>', en: '<span class="math-display">77</span>' },
+                        { ar: '<span class="math-display">-1</span>', en: '<span class="math-display">-1</span>' },
+                        { ar: '<span class="math-display">3</span>', en: '<span class="math-display">3</span>' }
+                    ],
+                    correct: 0,
+                    answer: { ar: 'g(9) = 3, f(3) = 9 - 4 = 5', en: 'g(9) = 3, f(3) = 5' }
+                },
+                {
+                    q: { ar: '<strong>س30:</strong> إذا f(x) = 2x و g(x) = x + 3، فما قيمة x التي تجعل [f ∘ g](x) = [g ∘ f](x)؟', en: '<strong>Q30:</strong> If f(x) = 2x and g(x) = x + 3, what x makes [f ∘ g](x) = [g ∘ f](x)?' },
+                    options: [
+                        { ar: '<span class="math-display">x = 3</span>', en: '<span class="math-display">x = 3</span>' },
+                        { ar: '<span class="math-display">x = 0</span>', en: '<span class="math-display">x = 0</span>' },
+                        { ar: '<span class="math-display">x = 6</span>', en: '<span class="math-display">x = 6</span>' },
+                        { ar: 'لا توجد قيمة', en: 'No value exists' }
+                    ],
+                    correct: 0,
+                    answer: { ar: '[f∘g](x) = 2(x+3) = 2x+6. [g∘f](x) = 2x+3. 2x+6 = 2x+3 → 6 = 3 (مستحيل). لا توجد قيمة', en: '[f∘g](x) = 2x+6, [g∘f](x) = 2x+3. 2x+6 = 2x+3 has no solution' }
+                }
+            ]
+        }
+    ]
+};
+
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function prepareShuffledExam() {
+    rng = mulberry32(currentSeed);
+    examData = JSON.parse(JSON.stringify(originalExamData));
+    correctAnswersMap = {};
+    let globalIdx = 0;
+    examData.sections.forEach((section) => {
+        section.questions = shuffleArray(section.questions);
+        section.questions.forEach((q) => {
+            const optionsWithCorrect = q.options.map((opt, idx) => ({ option: opt, isCorrect: idx === q.correct }));
+            const shuffledOptions = shuffleArray(optionsWithCorrect);
+            q.options = shuffledOptions.map(o => o.option);
+            q.correct = shuffledOptions.findIndex(o => o.isCorrect);
+            correctAnswersMap[globalIdx] = String.fromCharCode(97 + q.correct);
+            globalIdx++;
+        });
+    });
+}
+
+function reshuffleExam() {
+    const msg = currentLang === 'ar' ? '🔄 سيتم إنشاء أسئلة جديدة ومسح إجاباتك. هل أنت متأكد؟' : '🔄 New questions will be generated. Are you sure?';
+    if (confirm(msg)) {
+        currentSeed = Date.now(); timeRemaining = TOTAL_TIME; answersVisible = false;
+        prepareShuffledExam(); renderExam(); saveState();
+        alert(currentLang === 'ar' ? '🎲 تم تغيير الأسئلة! حظاً موفقاً! 🍀' : '🎲 Questions changed! Good luck! 🍀');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.body.classList.toggle('en-mode', lang === 'en');
+    
+    document.querySelectorAll('[data-ar]').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    
+    document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
+        el.placeholder = el.getAttribute('data-placeholder-' + lang);
+    });
+    
+    renderExam(); saveState(false);
+}
+
+function renderExam() {
+    const container = document.getElementById('exam-content');
+    const labels = { ar: { option: ['أ', 'ب', 'ج', 'د'], answer: '✅ الإجابة:' }, en: { option: ['A', 'B', 'C', 'D'], answer: '✅ Answer:' } };
+    const lbl = labels[currentLang];
+    let html = '';
+    let globalIdx = 0;
+    
+    examData.sections.forEach((section, secIdx) => {
+        const badgeClass = ['module-1', 'module-2', 'module-3', 'module-4', 'module-5', 'module-6'][secIdx];
+        html += '<section class="bg-white p-6 rounded-2xl shadow-lg border-2 border-amber-100">';
+        html += '<div class="text-center mb-4"><span class="module-badge ' + badgeClass + '">' + section.title[currentLang] + '</span></div>';
+        html += '<ol class="space-y-4 text-sm">';
+        
+        section.questions.forEach((q) => {
+            html += '<li class="border-r-4 border-amber-400 pr-4 py-2" id="q-' + globalIdx + '" style="border-right: 4px solid #d97706; padding-right: 1rem;">';
+            html += '<strong class="text-amber-700">' + (globalIdx + 1) + '.</strong> ' + q.q[currentLang] + '<br>';
+            if (q.svg) html += '<div class="graph-container">' + q.svg + '</div>';
+            
+            q.options.forEach((opt, oIdx) => {
+                html += '<label class="cursor-pointer block mt-2 mr-4 hover:bg-amber-50 rounded-lg p-2 transition" style="margin-right: 1rem;">';
+                html += '<input type="radio" name="q' + globalIdx + '" value="' + String.fromCharCode(97 + oIdx) + '" class="mr-2 ml-2">';
+                html += '<span class="arabic-math">' + lbl.option[oIdx] + ') ' + opt[currentLang] + '</span>';
+                html += '</label>';
+            });
+            
+            html += '<div class="answer-box text-green-700 mt-3 font-medium ' + (answersVisible ? '' : 'hidden') + ' bg-green-50 rounded-lg p-3 border border-green-200">';
+            html += lbl.answer + ' ' + lbl.option[q.correct] + ') <span class="arabic-math">' + q.options[q.correct][currentLang] + '</span><br>';
+            html += '<span class="text-sm text-green-700 mt-2 block arabic-math">' + q.answer[currentLang] + '</span>';
+            html += '</div></li>';
+            globalIdx++;
+        });
+        
+        html += '</ol></section>';
+    });
+    
+    container.innerHTML = html;
+}
+
+function startTimer() {
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining % 60 === 0) saveState(false);
+        if (timeRemaining <= 600) document.getElementById('timer').classList.add('timer-warning');
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert(currentLang === 'ar' ? "⏰ انتهى الوقت!" : "⏰ Time's up!");
+            gradeExam();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeRemaining / 60);
+    const s = timeRemaining % 60;
+    document.getElementById('timer').textContent = m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0');
+}
+
+function toggleAnswers() {
+    answersVisible = !answersVisible;
+    document.querySelectorAll('.answer-box').forEach(el => el.classList.toggle('hidden', !answersVisible));
+    saveState(false);
+}
+
+function gradeExam() {
+    let correctCount = 0;
+    const sectionScores = new Array(TOTAL_SECTIONS).fill(0);
+    
+    for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const sel = document.querySelector('input[name="q'+i+'"]:checked');
+        const li = document.getElementById('q-' + i);
+        if (li) {
+            const isCorrect = sel && sel.value === correctAnswersMap[i];
+            if (isCorrect) {
+                correctCount++;
+                li.classList.add('correct');
+                li.classList.remove('incorrect');
+                sectionScores[Math.floor(i / QUESTIONS_PER_SECTION)]++;
+            } else {
+                li.classList.add('incorrect');
+                li.classList.remove('correct');
+            }
+        }
+    }
+    
+    const score = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+    document.getElementById('res-total').textContent = score + ' / 100';
+    document.getElementById('res-name').textContent = document.getElementById('studentName').value || (currentLang === 'ar' ? 'بطل' : 'Champion');
+    document.getElementById('res-date').textContent = new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-US');
+    
+    const pc = document.getElementById('sections-performance');
+    pc.innerHTML = '';
+    examData.sections.forEach((s, idx) => {
+        pc.innerHTML += '<div class="flex justify-between items-center p-3 bg-white rounded-lg"><span class="text-gray-700">' + s.title[currentLang] + '</span><span class="font-bold text-amber-700">' + sectionScores[idx] + '/' + QUESTIONS_PER_SECTION + '</span></div>';
+    });
+    
+    const badge = document.getElementById('success-badge');
+    document.getElementById('success-percent').textContent = score + '%';
+    
+    if (currentLang === 'ar') {
+        if (score >= 90) { badge.textContent = '🌟 ممتاز جداً!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 ممتاز!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 جيد'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 حاول مرة أخرى'; badge.className = 'success-badge grade-fail'; }
+    } else {
+        if (score >= 90) { badge.textContent = '🌟 Outstanding!'; badge.className = 'success-badge grade-excellent'; }
+        else if (score >= 75) { badge.textContent = '👏 Excellent!'; badge.className = 'success-badge grade-good'; }
+        else if (score >= 50) { badge.textContent = '👍 Good'; badge.className = 'success-badge grade-pass'; }
+        else { badge.textContent = '💪 Try Again'; badge.className = 'success-badge grade-fail'; }
+    }
+    
+    document.getElementById('results-panel').classList.remove('hidden');
+    document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth' });
+    if (timerInterval) clearInterval(timerInterval);
+}
+
+function sendResultsToEmail() {
+    const btn = document.getElementById('sendEmailBtn');
+    const status = document.getElementById('emailStatus');
+    btn.disabled = true;
+    btn.textContent = currentLang === 'ar' ? '⏳ جاري الإرسال...' : '⏳ Sending...';
+    
+    const name = document.getElementById('studentName').value || 'N/A';
+    const studentClass = document.getElementById('studentClass').value || 'N/A';
+    const date = document.getElementById('examDate').value || new Date().toLocaleDateString();
+    const score = document.getElementById('res-total').textContent;
+    const successRate = document.getElementById('success-percent').textContent;
+    const badge = document.getElementById('success-badge').textContent;
+    
+    let questionsHTML = '<div style="font-family:Arial; direction:rtl;">';
+    questionsHTML += '<h2>📐 ' + (currentLang === 'ar' ? 'نتيجة امتحان تركيب الدوال' : 'Composition of Functions Exam Result') + '</h2>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الاسم' : 'Name') + ':</strong> ' + name + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الشعبة' : 'Class') + ':</strong> ' + studentClass + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + ':</strong> ' + date + '</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'الدرجة' : 'Score') + ':</strong> ' + score + ' (' + successRate + '%)</p>';
+    questionsHTML += '<p><strong>' + (currentLang === 'ar' ? 'التقدير' : 'Grade') + ':</strong> ' + badge + '</p>';
+    questionsHTML += '<hr><h3>' + (currentLang === 'ar' ? 'تفاصيل الإجابات:' : 'Answer Details:') + '</h3><table style="width:100%; border-collapse:collapse;">';
+    questionsHTML += '<tr style="background:#d97706; color:white;"><th style="padding:8px; border:1px solid #ddd;">#</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'السؤال' : 'Question') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'إجابة الطالب' : 'Student Answer') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'الصحيحة' : 'Correct') + '</th><th style="padding:8px; border:1px solid #ddd;">' + (currentLang === 'ar' ? 'النتيجة' : 'Result') + '</th></tr>';
+    
+    let globalIdx = 0;
+    examData.sections.forEach((section) => {
+        questionsHTML += '<tr style="background:#fef3c7;"><td colspan="5" style="padding:8px; font-weight:bold; border:1px solid #ddd;">' + section.title.ar + '</td></tr>';
+        section.questions.forEach((q) => {
+            const sel = document.querySelector('input[name="q'+globalIdx+'"]:checked');
+            const sv = sel ? sel.value : null;
+            const cv = correctAnswersMap[globalIdx];
+            const ic = sv === cv;
+            let sat = currentLang === 'ar' ? '❌ لم يجب' : '❌ No answer';
+            let sac = '#dc2626';
+            if (sv) {
+                const si = sv.charCodeAt(0) - 97;
+                sat = q.options[si][currentLang];
+                sac = ic ? '#16a34a' : '#dc2626';
+            }
+            const cat = q.options[q.correct][currentLang];
+            const rb = ic ? '#f0fdf4' : '#fef2f2';
+            questionsHTML += '<tr style="background:' + rb + ';"><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + (globalIdx+1) + '</td><td style="padding:8px; border:1px solid #ddd;">' + q.q.ar + '</td><td style="padding:8px; border:1px solid #ddd; color:' + sac + ';">' + sat + '</td><td style="padding:8px; border:1px solid #ddd; color:#16a34a;">' + cat + '</td><td style="padding:8px; border:1px solid #ddd; text-align:center;">' + (ic?'✅':'❌') + '</td></tr>';
+            globalIdx++;
+        });
+    });
+    questionsHTML += '</table></div>';
+    
+    const templateParams = {
+        to_email: TARGET_EMAIL,
+        student_name: name,
+        student_class: studentClass,
+        exam_date: date,
+        total_score: score,
+        success_rate: successRate,
+        grade: badge,
+        answers_table: questionsHTML
+    };
+    
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+        .then(() => {
+            status.textContent = currentLang === 'ar' ? '✅ تم الإرسال بنجاح!' : '✅ Sent successfully!';
+            status.style.color = '#16a34a';
+            btn.textContent = currentLang === 'ar' ? '✓ تم' : '✓ Sent';
+            alert(currentLang === 'ar' ? 'تم إرسال النتيجة للمعلم بنجاح!' : 'Result sent to teacher successfully!');
+        })
+        .catch((error) => {
+            status.textContent = currentLang === 'ar' ? '❌ فشل الإرسال' : '❌ Failed to send';
+            status.style.color = '#dc2626';
+            btn.disabled = false;
+            btn.textContent = currentLang === 'ar' ? '📧 حاول مرة أخرى' : '📧 Try Again';
+            alert(currentLang === 'ar' ? 'فشل الإرسال: ' + error.text : 'Failed: ' + error.text);
+        });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = loadState();
+    if (saved && saved.seed) {
+        currentSeed = saved.seed;
+        currentLang = saved.lang || 'ar';
+        timeRemaining = saved.timeRemaining !== undefined ? saved.timeRemaining : TOTAL_TIME;
+        answersVisible = saved.answersVisible || false;
+    } else {
+        currentSeed = Date.now();
+    }
+    
+    document.getElementById('btn-ar').classList.toggle('active', currentLang === 'ar');
+    document.getElementById('btn-en').classList.toggle('active', currentLang === 'en');
+    document.body.classList.toggle('en-mode', currentLang === 'en');
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    
+    document.querySelectorAll('[data-ar]').forEach(el => {
+        el.textContent = el.getAttribute('data-' + currentLang);
+    });
+    
+    document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
+        el.placeholder = el.getAttribute('data-placeholder-' + currentLang);
+    });
+    
+    prepareShuffledExam();
+    renderExam();
+    if (saved) {
+        if (saved.studentName) document.getElementById('studentName').value = saved.studentName;
+        if (saved.studentClass) document.getElementById('studentClass').value = saved.studentClass;
+        if (saved.examDate) document.getElementById('examDate').value = saved.examDate;
+        if (saved.answers) restoreAnswers(saved.answers);
+    }
+    setupAnswerListeners();
+    setupInputListeners();
+    startTimer();
+});
+window.addEventListener('beforeunload', () => saveState(false));
+</script>
+</body>
+</html>
